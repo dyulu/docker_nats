@@ -1,0 +1,17 @@
+FROM alpine:3.11
+
+RUN apk add git go
+ENV GOROOT /usr/lib/go
+ENV GOPATH /go
+ENV PATH /go/bin:$PATH
+RUN mkdir -p ${GOPATH}/src ${GOPATH}/bin
+WORKDIR $GOPATH
+
+# Install NATS GO client
+RUN go get github.com/nats-io/nats.go/
+
+# Install NATS server
+RUN go get github.com/nats-io/nats-server
+
+ENTRYPOINT (${GOPATH}/bin/nats-server &) && (go run ${GOPATH}/src/github.com/nats-io/nats.go/examples/nats-sub/main.go mem_usage_fault)
+

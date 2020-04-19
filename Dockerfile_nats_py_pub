@@ -1,0 +1,16 @@
+FROM alpine:3.11
+
+ADD ./src /src
+WORKDIR /src
+
+RUN apk add python3 py3-psutil
+RUN pip3 install -r requirements.txt
+
+# Flask REST API port
+EXPOSE 5000
+
+ENV NATS_SERVER =  nats_server_go_sub
+
+# ENTRYPOINT (/src/MemUsageMonitorAPI.py &) && /bin/sh
+CMD ["python3", "/src/MemUsageMonitorAPI.py"]
+
